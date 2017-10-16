@@ -40,3 +40,7 @@ CMakeSettings.json
 
 # Build directories
 build/
+
+# Jetbrains CLion
+cmake-build-*/
+.idea/
