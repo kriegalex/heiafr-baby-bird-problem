@@ -15,13 +15,13 @@ int InitProgramOptions(unsigned long &chicks_number,
   po::options_description desc("Allowed options");
   desc.add_options()
       ("help", "produce help message")
-      ("chicks", po::value<int>(), "number of chick processes")
-      ("iters", po::value<int>(), "the number of iterations a baby chick "
+      ("chicks", po::value<unsigned long>(), "number of chick processes")
+      ("iters", po::value<unsigned int>(), "the number of iterations a baby chick "
           "does before it reaches adulthood and leaves the nest")
-      ("parents", po::value<int>(), "the number of parents")
-      ("portion", po::value<int>(), "the maximum portion size a parent"
+      ("parents", po::value<unsigned long>(), "the number of parents")
+      ("portion", po::value<unsigned int>(), "the maximum portion size a parent"
           "brings back from a hunt")
-      ("hunting", po::value<int>(), "the success rate a parent has when hunting");
+      ("hunting", po::value<unsigned int>(), "the success rate a parent has when hunting");
 
   po::variables_map vm;
   po::store(po::parse_command_line(ac, av, desc), vm);
