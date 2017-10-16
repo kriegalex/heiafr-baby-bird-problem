@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+#VSCode
+.vscode/
+
+# Visual Studio community
+.vs/
+CMakeSettings.json
+
+# Build directories
+build/
