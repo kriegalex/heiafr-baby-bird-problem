@@ -98,9 +98,9 @@ void CreateParentsProcesses(std::vector<std::thread> &thread_ptrs) {
  * Better than creating two methods for Parents and Chicks,
  * but same effect !
  *
- * @tparam F the function to use
+ * @tparam F the templated function pointer
  * @param thread_ptrs the array of threads
- * @param func_ptr the function the thread will use
+ * @param func_ptr the function pointer the thread will call
  */
 template<typename F>
 void CreateProcesses(std::vector<std::thread> &thread_ptrs, F func_ptr) {

@@ -15,9 +15,12 @@ if(CMAKE_COMPILER_IS_GNUCXX) # if gcc (not visual c++)
     set (CMAKE_CXX_FLAGS_RELEASE "-O2")
 endif()
 
-set(SRCS src/main.cpp)
-set(HDRS )
+set(SRCS src/main.cpp src/Parent.cpp src/Chick.cpp src/Nest.cpp)
+set(HDRS include/Parent.h include/Chick.h include/Nest.h)
+set(kekekbri_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 
+# allow headers in include/ to be included without the full path in src/
+include_directories(${kekekbri_INCLUDE_DIR})
 add_executable(kekekbri ${SRCS} ${HDRS})
 # link our executable with thread library found by cmake
 target_link_libraries(kekekbri ${CMAKE_THREAD_LIBS_INIT})
