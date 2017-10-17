@@ -110,7 +110,7 @@ void ChickProcess(unsigned int id, unsigned int max_iter, Nest &nest) {
     c.EatAndDigest();
   }
   PrintThread{} << "Chick " << id << " has grown up." << std::endl;
-  nest.LeaveNest(0);
+  nest.LeaveNest(id);
 }
 
 void CreateChicksProcesses(std::vector<std::thread> &thread_ptrs,

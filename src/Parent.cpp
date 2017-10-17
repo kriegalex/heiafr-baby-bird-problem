@@ -21,9 +21,14 @@ void Parent::Rest() const {
 void Parent::Hunt() {
   if (HuntIsSuccessfull()) {
     m_food_hunted += m_max_food_size;
+#ifdef DEBUG
     PrintThread{} << "Parent " << m_id << " hunts successfully " << m_max_food_size << " food." << std::endl;
-  } else
+#endif
+  } else {
+#ifdef DEBUG
     PrintThread{} << "Parent " << m_id << " doesn't hunt successfully " << m_max_food_size << " food." << std::endl;
+#endif
+  }
 }
 void Parent::DepositFood(Nest &nest) {
   unsigned int nest_capacity = nest.get_food_capacity();
@@ -41,11 +46,15 @@ void Parent::DepositFood(Nest &nest) {
     }
     if (m_food_hunted > nest_capacity) {
       nest.IncreaseFoodStored(nest_capacity);
+#ifdef DEBUG
       PrintThread{} << "Parent " << m_id << " deposits " << nest_capacity << " food in nest." << std::endl;
+#endif
       m_food_hunted -= nest_capacity;
     } else {
       nest.IncreaseFoodStored(m_food_hunted);
+#ifdef DEBUG
       PrintThread{} << "Parent " << m_id << " deposits " << m_food_hunted << " food in nest." << std::endl;
+#endif
       m_food_hunted = 0;
     }
     Rest();

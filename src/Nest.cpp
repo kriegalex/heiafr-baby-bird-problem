@@ -37,14 +37,18 @@ bool Nest::IsNestEmpty() const {
 }
 bool Nest::ChicksCheckIsFoodEmpty(unsigned int id) {
   chicks_mutex.lock();
+#ifdef DEBUG
   PrintThread{} << "Chick " << id << " checks nest has " << m_food_stored << " food." << std::endl;
+#endif
   if (m_food_stored == 0) // if no food, release lock
     chicks_mutex.unlock();
   return m_food_stored == 0;
 }
 bool Nest::ParentsCheckIsFoodEmpty(unsigned int id) {
   parents_mutex.lock();
+#ifdef DEBUG
   PrintThread{} << "Parent " << id << " checks nest has " << m_food_stored << " food." << std::endl;
+#endif
   if (m_food_stored != 0) // if already food, release lock
     parents_mutex.unlock();
   return m_food_stored == 0;

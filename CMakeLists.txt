@@ -8,12 +8,13 @@ find_package(Boost COMPONENTS program_options REQUIRED)
 # CMake knowns already how to find it (at least in Linux)
 find_package(Threads REQUIRED)
 
-set (CMAKE_CXX_STANDARD 14) # aim for c++14
-if(CMAKE_COMPILER_IS_GNUCXX) # if gcc (not visual c++)
-    add_compile_options( -pedantic -Wall -Wextra)
-    set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
-    set (CMAKE_CXX_FLAGS_RELEASE "-O2")
-endif()
+set(CMAKE_CXX_STANDARD 14) # aim for c++14
+if (CMAKE_COMPILER_IS_GNUCXX) # if gcc (not visual c++)
+  add_compile_options(-pedantic -Wall -Wextra)
+  # add DEBUG symbol when in debug mode and no optimizations
+  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -DDEBUG")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+endif ()
 
 set(SRCS src/main.cpp src/Parent.cpp src/Chick.cpp src/Nest.cpp src/PrintThread.cpp)
 set(HDRS include/Parent.h include/Chick.h include/Nest.h include/PrintThread.h)

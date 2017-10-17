@@ -3,9 +3,7 @@
 //
 
 #include <thread>
-#include <iostream>
 
-#include "PrintThread.h"
 #include "Chick.h"
 
 Chick::Chick(unsigned int id) {
@@ -18,10 +16,14 @@ void Chick::Sleep() const {
 void Chick::GetFood(Nest &nest) {
   while (nest.ChicksCheckIsFoodEmpty(m_id)) Sleep();
   nest.DecreaseFoodStored(m_eat_amount);
+#ifdef DEBUG
   PrintThread{} << "Chick " << m_id << " gets " << m_eat_amount << " amount of food from Nest." << std::endl;
+#endif
   m_food += m_eat_amount;
 }
 void Chick::EatAndDigest() {
   m_food -= m_eat_amount;
+#ifdef DEBUG
   PrintThread{} << "Chick " << m_id << " eats." << std::endl;
+#endif
 }
