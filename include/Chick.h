@@ -8,7 +8,7 @@
 
 class Chick {
  public:
-  Chick(unsigned int id);
+  explicit Chick(unsigned int id);
   void Sleep() const;
   void GetFood(Nest &nest);
   void EatAndDigest();

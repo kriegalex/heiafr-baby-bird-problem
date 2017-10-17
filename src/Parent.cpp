@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "Parent.h"
+#include "PrintThread.h"
 
 Parent::Parent(unsigned int hunt_success_rate, unsigned int max_food_size, unsigned int id) {
   m_hunt_success_rate = hunt_success_rate;
@@ -24,9 +25,9 @@ void Parent::Hunt() {
   unsigned int dice = uniform_int_distribution(engine);
   if (dice <= m_hunt_success_rate) {
     m_food_hunted += m_max_food_size;
-    std::cout << "Parent " << m_id << " hunts successfully " << m_max_food_size << " food." << std::endl;
+    PrintThread{} << "Parent " << m_id << " hunts successfully " << m_max_food_size << " food." << std::endl;
   } else
-    std::cout << "Parent " << m_id << " doesn't hunt successfully " << m_max_food_size << " food." << std::endl;
+    PrintThread{} << "Parent " << m_id << " doesn't hunt successfully " << m_max_food_size << " food." << std::endl;
 
 }
 void Parent::DepositFood(Nest &nest) {
@@ -37,11 +38,11 @@ void Parent::DepositFood(Nest &nest) {
     while (nest.get_food_stored() > 0) Rest();
     if (m_food_hunted > nest_capacity) {
       nest.IncreaseFoodStored(nest_capacity);
-      std::cout << "Parent " << m_id << " deposits " << nest_capacity << " food in nest." << std::endl;
+      PrintThread{} << "Parent " << m_id << " deposits " << nest_capacity << " food in nest." << std::endl;
       m_food_hunted -= nest_capacity;
     } else {
       nest.IncreaseFoodStored(m_food_hunted);
-      std::cout << "Parent " << m_id << " deposits " << m_food_hunted << " food in nest." << std::endl;
+      PrintThread{} << "Parent " << m_id << " deposits " << m_food_hunted << " food in nest." << std::endl;
       m_food_hunted = 0;
     }
     Rest();

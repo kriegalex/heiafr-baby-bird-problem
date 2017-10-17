@@ -5,6 +5,7 @@
 
 #include "Chick.h"
 #include "Parent.h"
+#include "PrintThread.h"
 
 namespace po = boost::program_options;
 
@@ -79,8 +80,8 @@ int InitProgramOptions(unsigned long &chicks_number,
 
 void ParentProcess(unsigned int id, unsigned int max_food_size, unsigned int hunting_success_rate, Nest &n) {
   Parent p(hunting_success_rate, max_food_size, id);
-  std::cout << "Hello world, I'm parent " << id << std::endl;
-  while (true) { // TODO
+  PrintThread{} << "Hello world, I'm parent " << id << std::endl;
+  while (!n.IsNestEmpty()) {
     p.Hunt();
     p.DepositFood(n);
     p.Rest();
@@ -89,13 +90,14 @@ void ParentProcess(unsigned int id, unsigned int max_food_size, unsigned int hun
 
 void ChickProcess(unsigned int id, unsigned int max_iter, Nest &nest) {
   Chick c(id);
-  std::cout << "Hello world, I'm chick " << id << std::endl;
+  PrintThread{} << "Hello world, I'm chick " << id << std::endl;
   for (unsigned int i = 0; i < max_iter; ++i) {
     c.Sleep();
     c.GetFood(nest);
     c.EatAndDigest();
   }
-  std::cout << "Chick " << id << " has grown up." << std::endl;
+  PrintThread{} << "Chick " << id << " has grown up." << std::endl;
+  nest.LeaveNest();
 }
 
 void CreateChicksProcesses(std::vector<std::thread> &thread_ptrs, unsigned int max_iter, Nest &nest) {
@@ -136,7 +138,7 @@ int main(const int ac, const char **av) {
   std::vector<std::thread> parents_threads(parents_number);
   std::vector<std::thread> chicks_threads(chicks_number);
 
-  Nest n; // the shared nest
+  Nest n(chicks_number); // the shared nest
 
   CreateChicksProcesses(chicks_threads, baby_chick_iters, n);
   CreateParentsProcesses(parents_threads, max_food_size, hunting_success_rate, n);
