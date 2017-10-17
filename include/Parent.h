@@ -19,4 +19,6 @@ class Parent {
   unsigned int m_max_food_size = 5;
   unsigned int m_food_hunted = 0;
   unsigned int m_id = 0;
+
+  bool HuntIsSuccessfull() const;
 };

@@ -9,6 +9,18 @@
 
 namespace po = boost::program_options;
 
+/**
+ * Read options from command line
+ *
+ * @param chicks_number
+ * @param baby_chick_iters
+ * @param parents_number
+ * @param portion_size
+ * @param hunting_success_rate
+ * @param ac arguments count
+ * @param av arguments values
+ * @return 1 if failure, 0 otherwise
+ */
 int InitProgramOptions(unsigned long &chicks_number,
                        unsigned int &baby_chick_iters,
                        unsigned long &parents_number,
@@ -38,7 +50,7 @@ int InitProgramOptions(unsigned long &chicks_number,
 
   if (vm.count("chicks")) {
     std::cout << "Chicks number was set to "
-              << vm["chicks"].as<unsigned long>() << ".\n";
+        << vm["chicks"].as<unsigned long>() << ".\n";
     chicks_number = vm["chicks"].as<unsigned long>();
   } else {
     std::cout << "Chicks number was defaulted to " << chicks_number << ".\n";
@@ -46,7 +58,7 @@ int InitProgramOptions(unsigned long &chicks_number,
 
   if (vm.count("iters")) {
     std::cout << "Baby chicks iterations was set to "
-              << vm["iters"].as<unsigned int>() << ".\n";
+        << vm["iters"].as<unsigned int>() << ".\n";
     baby_chick_iters = vm["iters"].as<unsigned int>();
   } else {
     std::cout << "Baby chicks iterations was defaulted to " << baby_chick_iters << ".\n";
@@ -54,7 +66,7 @@ int InitProgramOptions(unsigned long &chicks_number,
 
   if (vm.count("parents")) {
     std::cout << "Parents number was set to "
-              << vm["parents"].as<unsigned long>() << ".\n";
+        << vm["parents"].as<unsigned long>() << ".\n";
     parents_number = vm["parents"].as<unsigned long>();
   } else {
     std::cout << "Parents number was defaulted to " << parents_number << ".\n";
@@ -62,7 +74,7 @@ int InitProgramOptions(unsigned long &chicks_number,
 
   if (vm.count("portion")) {
     std::cout << "Portion size was set to "
-              << vm["portion"].as<unsigned int>() << ".\n";
+        << vm["portion"].as<unsigned int>() << ".\n";
     portion_size = vm["portion"].as<unsigned int>();
   } else {
     std::cout << "Portion size was defaulted to " << portion_size << ".\n";
@@ -78,7 +90,8 @@ int InitProgramOptions(unsigned long &chicks_number,
   return 0;
 }
 
-void ParentProcess(unsigned int id, unsigned int max_food_size, unsigned int hunting_success_rate, Nest &n) {
+void ParentProcess(unsigned int id, unsigned int max_food_size,
+                   unsigned int hunting_success_rate, Nest &n) {
   Parent p(hunting_success_rate, max_food_size, id);
   PrintThread{} << "Hello world, I'm parent " << id << std::endl;
   while (!n.IsNestEmpty()) {
@@ -97,10 +110,11 @@ void ChickProcess(unsigned int id, unsigned int max_iter, Nest &nest) {
     c.EatAndDigest();
   }
   PrintThread{} << "Chick " << id << " has grown up." << std::endl;
-  nest.LeaveNest();
+  nest.LeaveNest(0);
 }
 
-void CreateChicksProcesses(std::vector<std::thread> &thread_ptrs, unsigned int max_iter, Nest &nest) {
+void CreateChicksProcesses(std::vector<std::thread> &thread_ptrs,
+                           unsigned int max_iter, Nest &nest) {
   unsigned int id = 0;
   for (auto &thread : thread_ptrs) {
     thread = std::thread(ChickProcess, id++, max_iter, std::ref(nest));
@@ -113,10 +127,16 @@ void CreateParentsProcesses(std::vector<std::thread> &thread_ptrs,
                             Nest &n) {
   unsigned int id = 0;
   for (auto &thread : thread_ptrs) {
-    thread = std::thread(ParentProcess, id++, max_food_size, hunting_success_rate, std::ref(n));
+    thread = std::thread(ParentProcess, id++, max_food_size,
+                         hunting_success_rate, std::ref(n));
   }
 }
 
+/**
+ * Wait for all processes to finish
+ *
+ * @param thread_ptrs the array of threads
+ */
 void JoinAllProcesses(std::vector<std::thread> &thread_ptrs) {
   for (auto &thread : thread_ptrs) {
     thread.join();
@@ -135,6 +155,7 @@ int main(const int ac, const char **av) {
                                 max_food_size, hunting_success_rate, ac, av);
   if (fail) return 1;
 
+  // vectors of threads
   std::vector<std::thread> parents_threads(parents_number);
   std::vector<std::thread> chicks_threads(chicks_number);
 

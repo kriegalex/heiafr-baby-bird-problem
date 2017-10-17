@@ -19,23 +19,26 @@ void Parent::Rest() const {
   std::this_thread::sleep_for(std::chrono::milliseconds(m_sleep_time_millisec));
 }
 void Parent::Hunt() {
-  std::random_device rd;
-  std::default_random_engine engine(rd());
-  std::uniform_int_distribution<unsigned int> uniform_int_distribution(1, 100);
-  unsigned int dice = uniform_int_distribution(engine);
-  if (dice <= m_hunt_success_rate) {
+  if (HuntIsSuccessfull()) {
     m_food_hunted += m_max_food_size;
     PrintThread{} << "Parent " << m_id << " hunts successfully " << m_max_food_size << " food." << std::endl;
   } else
     PrintThread{} << "Parent " << m_id << " doesn't hunt successfully " << m_max_food_size << " food." << std::endl;
-
 }
 void Parent::DepositFood(Nest &nest) {
   unsigned int nest_capacity = nest.get_food_capacity();
   // while we have food from hunt
   while (m_food_hunted > 0) {
     // wait for the nest to be empty
-    while (nest.get_food_stored() > 0) Rest();
+    while (!nest.ParentsCheckIsFoodEmpty(m_id)) {
+      Rest();
+      if (nest.IsNestEmpty()) break;
+    }
+    if (nest.IsNestEmpty()) {
+      // drop food and go on deserved holidays
+      m_food_hunted = 0;
+      break;
+    }
     if (m_food_hunted > nest_capacity) {
       nest.IncreaseFoodStored(nest_capacity);
       PrintThread{} << "Parent " << m_id << " deposits " << nest_capacity << " food in nest." << std::endl;
@@ -47,4 +50,11 @@ void Parent::DepositFood(Nest &nest) {
     }
     Rest();
   }
+}
+bool Parent::HuntIsSuccessfull() const {
+  std::random_device rd;
+  std::default_random_engine engine(rd());
+  std::uniform_int_distribution<unsigned int> uniform_int_distribution(1, 100);
+  unsigned int dice = uniform_int_distribution(engine);
+  return dice <= m_hunt_success_rate;
 }
