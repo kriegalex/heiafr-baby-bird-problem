@@ -15,8 +15,8 @@ if(CMAKE_COMPILER_IS_GNUCXX) # if gcc (not visual c++)
     set (CMAKE_CXX_FLAGS_RELEASE "-O2")
 endif()
 
-set(SRCS src/main.cpp src/Parent.cpp src/Chick.cpp src/Nest.cpp)
-set(HDRS include/Parent.h include/Chick.h include/Nest.h)
+set(SRCS src/main.cpp src/Parent.cpp src/Chick.cpp src/Nest.cpp src/PrintThread.cpp)
+set(HDRS include/Parent.h include/Chick.h include/Nest.h include/PrintThread.h)
 set(kekekbri_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 
 # allow headers in include/ to be included without the full path in src/
