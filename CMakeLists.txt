@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.8) # ask for cmake >= 3.8
 project(kekekbri CXX) # project is c++ based
 
+# The version number.
+set(kekekbri_VERSION_MAJOR 1)
+set(kekekbri_VERSION_MINOR 0)
+
 # boost submodule "program_options" is required by our program
 find_package(Boost COMPONENTS program_options REQUIRED)
 
