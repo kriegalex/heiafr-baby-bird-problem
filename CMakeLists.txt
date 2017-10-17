@@ -11,7 +11,7 @@ find_package(Threads REQUIRED)
 set(CMAKE_CXX_STANDARD 14) # aim for c++14
 if (CMAKE_COMPILER_IS_GNUCXX) # if gcc (not visual c++)
   add_compile_options(-pedantic -Wall -Wextra)
-  # add DEBUG symbol when in debug mode and no optimizations
+  # add DEBUG symbol, no optimizations and retain symbol informations when in debug mode
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -DDEBUG")
   set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 endif ()

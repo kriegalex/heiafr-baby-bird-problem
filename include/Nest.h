@@ -22,9 +22,6 @@ class Nest {
   bool IsNestEmpty() const;
   bool ChicksCheckIsFoodEmpty(unsigned int id);
   bool ParentsCheckIsFoodEmpty(unsigned int id);
-  unsigned int get_food_stored() const;
-  void set_food_stored(const unsigned int &food_amount);
   unsigned int get_food_capacity() const;
-  void set_food_capacity(const unsigned int &food_amount);
 
 };

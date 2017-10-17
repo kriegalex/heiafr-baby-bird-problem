@@ -5,6 +5,7 @@
 #include <thread>
 
 #include "Chick.h"
+#include "PrintThread.h"
 
 Chick::Chick(unsigned int id) {
   m_id = id;
@@ -23,7 +24,7 @@ void Chick::GetFood(Nest &nest) {
 }
 void Chick::EatAndDigest() {
   m_food -= m_eat_amount;
-#ifdef DEBUG
+#ifdef DEBUG // this comes from CMake (CMakeLists.txt)
   PrintThread{} << "Chick " << m_id << " eats." << std::endl;
 #endif
 }

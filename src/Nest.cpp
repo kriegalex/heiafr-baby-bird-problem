@@ -16,17 +16,8 @@ void Nest::DecreaseFoodStored(const unsigned int &food_amount) {
   m_food_stored -= food_amount;
   chicks_mutex.unlock();
 }
-unsigned int Nest::get_food_stored() const {
-  return m_food_stored;
-}
-void Nest::set_food_stored(const unsigned int &food_amount) {
-  m_food_stored = food_amount;
-}
 unsigned int Nest::get_food_capacity() const {
   return m_food_capacity;
-}
-void Nest::set_food_capacity(const unsigned int &food_amount) {
-  m_food_capacity = food_amount;
 }
 void Nest::LeaveNest(unsigned int id) {
   m_chicks_in_nest--;
