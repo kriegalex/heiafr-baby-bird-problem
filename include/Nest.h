@@ -11,7 +11,7 @@ class Nest {
   unsigned long m_chicks_in_nest = 0;
 
  public:
-  Nest(unsigned long chicks_number);
+  explicit Nest(unsigned long chicks_number);
   void IncreaseFoodStored(const unsigned int &food_amount);
   void DecreaseFoodStored(const unsigned int &food_amount);
   void LeaveNest();
