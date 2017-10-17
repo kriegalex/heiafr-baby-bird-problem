@@ -2,8 +2,7 @@
 // Created by mlourenco on 16.10.17.
 //
 
-#ifndef KEKEKBRI_NEST_H
-#define KEKEKBRI_NEST_H
+#pragma once
 
 class Nest {
  private:
@@ -19,5 +18,3 @@ class Nest {
   void set_food_capacity(const unsigned int &food_amount);
 
 };
-
-#endif //KEKEKBRI_NEST_H

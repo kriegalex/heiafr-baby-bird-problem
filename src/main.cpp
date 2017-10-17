@@ -3,6 +3,9 @@
 
 #include<boost/program_options.hpp>
 
+#include "Chick.h"
+#include "Parent.h"
+
 namespace po = boost::program_options;
 
 int InitProgramOptions(unsigned long &chicks_number,
@@ -74,38 +77,41 @@ int InitProgramOptions(unsigned long &chicks_number,
   return 0;
 }
 
-void Parents() {
-  std::cout << "Hello world, I'm a parent" << std::endl;
-}
-
-void Chicks() {
-  std::cout << "Hello world, I'm a chick" << std::endl;
-}
-
-void CreateChicksProcesses(std::vector<std::thread> &thread_ptrs) {
-  for (auto &thread : thread_ptrs) {
-    thread = std::thread(Chicks);
+void ParentProcess(unsigned int id, unsigned int max_food_size, unsigned int hunting_success_rate, Nest &n) {
+  Parent p(hunting_success_rate, max_food_size, id);
+  std::cout << "Hello world, I'm parent " << id << std::endl;
+  while (true) { // TODO
+    p.Hunt();
+    p.DepositFood(n);
+    p.Rest();
   }
 }
 
-void CreateParentsProcesses(std::vector<std::thread> &thread_ptrs) {
+void ChickProcess(unsigned int id, unsigned int max_iter, Nest &nest) {
+  Chick c(id);
+  std::cout << "Hello world, I'm chick " << id << std::endl;
+  for (unsigned int i = 0; i < max_iter; ++i) {
+    c.Sleep();
+    c.GetFood(nest);
+    c.EatAndDigest();
+  }
+  std::cout << "Chick " << id << " has grown up." << std::endl;
+}
+
+void CreateChicksProcesses(std::vector<std::thread> &thread_ptrs, unsigned int max_iter, Nest &nest) {
+  unsigned int id = 0;
   for (auto &thread : thread_ptrs) {
-    thread = std::thread(Parents);
+    thread = std::thread(ChickProcess, id++, max_iter, std::ref(nest));
   }
 }
 
-/**
- * Better than creating two methods for Parents and Chicks,
- * but same effect !
- *
- * @tparam F the templated function pointer
- * @param thread_ptrs the array of threads
- * @param func_ptr the function pointer the thread will call
- */
-template<typename F>
-void CreateProcesses(std::vector<std::thread> &thread_ptrs, F func_ptr) {
+void CreateParentsProcesses(std::vector<std::thread> &thread_ptrs,
+                            unsigned int max_food_size,
+                            unsigned int hunting_success_rate,
+                            Nest &n) {
+  unsigned int id = 0;
   for (auto &thread : thread_ptrs) {
-    thread = std::thread(func_ptr);
+    thread = std::thread(ParentProcess, id++, max_food_size, hunting_success_rate, std::ref(n));
   }
 }
 
@@ -120,23 +126,20 @@ int main(const int ac, const char **av) {
   unsigned long chicks_number = 7;
   unsigned int baby_chick_iters = 53;
   unsigned long parents_number = 3;
-  unsigned int portion_size = 5;
+  unsigned int max_food_size = 5;
   unsigned int hunting_success_rate = 30;
 
   int fail = InitProgramOptions(chicks_number, baby_chick_iters, parents_number,
-                                portion_size, hunting_success_rate, ac, av);
+                                max_food_size, hunting_success_rate, ac, av);
   if (fail) return 1;
 
   std::vector<std::thread> parents_threads(parents_number);
   std::vector<std::thread> chicks_threads(chicks_number);
 
-  /*
-   * Same as :
-   * CreateChicksProcesses(chicks_threads);
-   * CreateParentsProcesses(parents_threads);
-   */
-  CreateProcesses(chicks_threads, Chicks);
-  CreateProcesses(parents_threads, Parents);
+  Nest n; // the shared nest
+
+  CreateChicksProcesses(chicks_threads, baby_chick_iters, n);
+  CreateParentsProcesses(parents_threads, max_food_size, hunting_success_rate, n);
 
   JoinAllProcesses(chicks_threads);
   JoinAllProcesses(parents_threads);
